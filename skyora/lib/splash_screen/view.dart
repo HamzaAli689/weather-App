@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 
 import 'logic.dart';
 
@@ -8,8 +9,7 @@ class SplashScreen extends GetView<SplashScreenLogic> {
 
   @override
   Widget build(BuildContext context) {
-    // Ensuring controller is initialized
-    Get.put(SplashScreenLogic());
+    final SplashScreenLogic controller = Get.put(SplashScreenLogic());
 
     return Scaffold(
       body: Container(
@@ -20,9 +20,9 @@ class SplashScreen extends GetView<SplashScreenLogic> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF0F172A), // Rich Deep Navy Top
-              Color(0xFF1E3A8A), // Mid Blue Tone
-              Color(0xFF090D16), // Dark Bottom
+              Color(0xFF0F172A),
+              Color(0xFF1E3A8A),
+              Color(0xFF090D16),
             ],
           ),
         ),
@@ -31,59 +31,41 @@ class SplashScreen extends GetView<SplashScreenLogic> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              // Glassmorphism Weather Icon Container
+              // Video Container with Glassmorphism effect
               Container(
-                width: 180,
-                height: 180,
+                width: 190,
+                height: 190,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withOpacity(0.03),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withOpacity(0.12),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 30,
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 35,
                       spreadRadius: 5,
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Glowing Blue Sun Element
-                      Positioned(
-                        top: 25,
-                        left: 35,
-                        child: Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFF00B4DB),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF00B4DB).withOpacity(0.6),
-                                blurRadius: 15,
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Fluffy White Cloud Element
-                      Positioned(
-                        bottom: 40,
-                        child: Icon(
-                          Icons.cloud,
-                          size: 90,
-                          color: Colors.white.withOpacity(0.95),
-                        ),
-                      ),
-                    ],
+                child: ClipOval(
+                  child: Center(
+                    child: Obx(() {
+                      if (controller.isVideoInitialized.value) {
+                        return SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: VideoPlayer(controller.videoController),
+                        );
+                      } else {
+                        return const CircularProgressIndicator(
+                          color: Colors.white54,
+                          strokeWidth: 2,
+                        );
+                      }
+                    }),
                   ),
                 ),
               ),
@@ -105,7 +87,6 @@ class SplashScreen extends GetView<SplashScreenLogic> {
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.6),
                   fontSize: 16,
-                  fontWeight: FontWeight.w400,
                   letterSpacing: 0.5,
                 ),
               ),
