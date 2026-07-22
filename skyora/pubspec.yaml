@@ -42,7 +42,6 @@ dependencies:
   glassmorphism: ^3.0.0
   font_awesome_flutter: ^10.7.0
   flutter_svg: ^2.0.10
-  video_player: ^2.8.2
 
 
 dev_dependencies:
