@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
-
 import 'logic.dart';
 
 class SplashScreen extends GetView<SplashScreenLogic> {
@@ -9,7 +7,7 @@ class SplashScreen extends GetView<SplashScreenLogic> {
 
   @override
   Widget build(BuildContext context) {
-    final SplashScreenLogic controller = Get.put(SplashScreenLogic());
+    Get.put(SplashScreenLogic());
 
     return Scaffold(
       body: Container(
@@ -20,9 +18,9 @@ class SplashScreen extends GetView<SplashScreenLogic> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF0F172A),
-              Color(0xFF1E3A8A),
-              Color(0xFF090D16),
+              Color(0xFF0F172A), // Rich Deep Navy Top
+              Color(0xFF1E3A8A), // Mid Blue Tone
+              Color(0xFF090D16), // Dark Bottom
             ],
           ),
         ),
@@ -31,7 +29,7 @@ class SplashScreen extends GetView<SplashScreenLogic> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              // Video Container with Glassmorphism effect
+              // 3D Weather Icon Container
               Container(
                 width: 190,
                 height: 190,
@@ -51,21 +49,12 @@ class SplashScreen extends GetView<SplashScreenLogic> {
                   ],
                 ),
                 child: ClipOval(
-                  child: Center(
-                    child: Obx(() {
-                      if (controller.isVideoInitialized.value) {
-                        return SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: VideoPlayer(controller.videoController),
-                        );
-                      } else {
-                        return const CircularProgressIndicator(
-                          color: Colors.white54,
-                          strokeWidth: 2,
-                        );
-                      }
-                    }),
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Image.asset(
+                      'Assets/images/1.png', // Apni 3D image ka path yahan dein
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
