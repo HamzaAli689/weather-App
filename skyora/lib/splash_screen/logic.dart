@@ -12,6 +12,6 @@ class SplashScreenLogic extends GetxController {
     // 3 seconds delay for splash effect
     await Future.delayed(const Duration(seconds: 3));
 
-     Get.offAll(OnboardingPage()); // Home screen route
+    // Get.offAll(OnboardingPage()); // Home screen route
   }
 }
