@@ -35,7 +35,7 @@ class OnboardingPage extends StatelessWidget {
                 // Glassmorphic Card Container for 3D Illustration
                 Container(
                   width: double.infinity,
-                  height: 300,
+                  height: 270,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.04),
                     borderRadius: BorderRadius.circular(30),
@@ -88,24 +88,7 @@ class OnboardingPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 // Page Indicator Dots
-                Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    3,
-                        (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: controller.selectedPageIndex.value == index ? 22 : 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: controller.selectedPageIndex.value == index
-                            ? const Color(0xFF3B82F6)
-                            : Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                )),
-                const Spacer(),
+
                 // Get Started Button
                 SizedBox(
                   width: double.infinity,
