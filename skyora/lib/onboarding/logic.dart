@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../dashboard/view.dart';
+
 class OnboardingLogic extends GetxController {
   var selectedPageIndex = 0.obs;
 
@@ -9,6 +11,6 @@ class OnboardingLogic extends GetxController {
 
   void getStarted() {
     // Navigate to Home screen using GetX
-    // Get.offAllNamed('/home');
+    Get.offAll(DashboardPage());
   }
 }
