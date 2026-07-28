@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
-        // Add your other routes here (e.g., Home, Forecast, Details)
       ],
     );
   }
