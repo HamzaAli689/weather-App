@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../SearchScreen/search_view.dart';
+import '../setting/view.dart';
 import 'logic.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -28,209 +29,211 @@ class DashboardPage extends StatelessWidget {
         ),
         child: SafeArea(
           child: Obx(
-            () => controller.isLoading.value
+                () => controller.isLoading.value
                 ? const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  )
+              child: CircularProgressIndicator(color: Colors.white),
+            )
                 : SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Location & Icons Bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          // ✅ Search screen se result wapas aane ka wait karein
+                          String? selectedCity = await Get.to(() => const SearchScreen());
+
+                          if (selectedCity != null && selectedCity.isNotEmpty) {
+                            controller.changeCity(selectedCity);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: Colors.white70,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              controller.cityName.value,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              // ✅ Search screen se result wapas aane ka wait karein
+                              String? selectedCity = await Get.to(() => const SearchScreen());
+
+                              if (selectedCity != null && selectedCity.isNotEmpty) {
+                                controller.changeCity(selectedCity);
+                              }
+                            },
+                            child: const Icon(
+                              Icons.search,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          GestureDetector(
+                            onTap: (){
+                              Get.to(SettingPage());
+                            },
+                            child: const Icon(
+                              Icons.account_circle_outlined,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Main Glass Weather Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.12),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 30,
+                          spreadRadius: 5,
+                        ),
+                      ],
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Top Location & Icons Bar
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                // Yahan search screen par navigate kar rahe hain
-                                //Get.toNamed('/search');
-                                // Agar named routes use nahi kar rahe toh ye use karein:
-                                Get.to(() => const SearchScreen());
-                              },
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_on,
-                                    color: Colors.white70,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    controller.cityName.value,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    // Yahan search screen par navigate kar rahe hain
-                                    //Get.toNamed('/search');
-                                    // Agar named routes use nahi kar rahe toh ye use karein:
-                                    Get.to(() => const SearchScreen());
-                                  },
-                                  child: const Icon(
-                                    Icons.search,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(width: 15),
-                                const Icon(
-                                  Icons.account_circle_outlined,
-                                  color: Colors.white70,
-                                ),
-                              ],
-                            ),
-                          ],
+                        const Icon(
+                          Icons.wb_sunny,
+                          color: Color(0xFFFBBF24),
+                          size: 64,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Main Glass Weather Card
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.12),
-                              width: 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 30,
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              const Icon(
-                                Icons.wb_sunny,
-                                color: Color(0xFFFBBF24),
-                                size: 64,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                controller.temperature.value,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 56,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                controller.condition.value,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                controller.feelsLike.value,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-
-                        // Weather Metrics Grid
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 1.6,
-                          children: [
-                            _buildStatCard(
-                              "Humidity",
-                              controller.humidity.value,
-                              Icons.water_drop_outlined,
-                            ),
-                            _buildStatCard(
-                              "Wind Speed",
-                              controller.windSpeed.value,
-                              Icons.air,
-                            ),
-                            _buildStatCard(
-                              "Pressure",
-                              controller.pressure.value,
-                              Icons.speed,
-                            ),
-                            _buildStatCard(
-                              "Visibility",
-                              controller.visibility.value,
-                              Icons.visibility_outlined,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25),
-
-                        // Section Title
-                        const Text(
-                          "Today's Forecast",
-                          style: TextStyle(
+                        const SizedBox(height: 10),
+                        Text(
+                          controller.temperature.value,
+                          style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 56,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 15),
-
-                        // Hourly Forecast Horizontal Scroll
-                        SizedBox(
-                          height: 105,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              _buildHourlyCard(
-                                "10:00",
-                                "32°C",
-                                Icons.wb_sunny,
-                                true,
-                              ),
-                              _buildHourlyCard(
-                                "11:00",
-                                "33°C",
-                                Icons.wb_sunny,
-                                false,
-                              ),
-                              _buildHourlyCard(
-                                "12:00",
-                                "34°C",
-                                Icons.wb_sunny,
-                                false,
-                              ),
-                              _buildHourlyCard(
-                                "13:00",
-                                "33°C",
-                                Icons.cloud,
-                                false,
-                              ),
-                            ],
+                        Text(
+                          controller.condition.value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          controller.feelsLike.value,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 25),
+
+                  // Weather Metrics Grid
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.6,
+                    children: [
+                      _buildStatCard(
+                        "Humidity",
+                        controller.humidity.value,
+                        Icons.water_drop_outlined,
+                      ),
+                      _buildStatCard(
+                        "Wind Speed",
+                        controller.windSpeed.value,
+                        Icons.air,
+                      ),
+                      _buildStatCard(
+                        "Pressure",
+                        controller.pressure.value,
+                        Icons.speed,
+                      ),
+                      _buildStatCard(
+                        "Visibility",
+                        controller.visibility.value,
+                        Icons.visibility_outlined,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+
+                  // Section Title
+                  const Text(
+                    "Today's Forecast (12+ Hours)",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  // Hourly Forecast Horizontal Scroll (Real-time dynamic data)
+                  SizedBox(
+                    height: 105,
+                    child: controller.hourlyForecast.isEmpty
+                        ? const Center(
+                      child: Text(
+                        "No forecast data available",
+                        style: TextStyle(color: Colors.white54),
+                      ),
+                    )
+                        : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.hourlyForecast.length,
+                      itemBuilder: (context, index) {
+                        final hourly = controller.hourlyForecast[index];
+                        // Pehla item selected dikhane ke liye logic
+                        bool isSelected = index == 0;
+                        return _buildHourlyCard(
+                          hourly['time'],
+                          hourly['temp'],
+                          hourly['icon'],
+                          isSelected,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -277,11 +280,11 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildHourlyCard(
-    String time,
-    String temp,
-    IconData icon,
-    bool isSelected,
-  ) {
+      String time,
+      String temp,
+      IconData icon,
+      bool isSelected,
+      ) {
     return Container(
       width: 70,
       margin: const EdgeInsets.only(right: 12),
@@ -304,7 +307,7 @@ class DashboardPage extends StatelessWidget {
             time,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
-              fontSize: 12,
+              fontSize: 11,
             ),
           ),
           Icon(icon, color: const Color(0xFFFBBF24), size: 22),
