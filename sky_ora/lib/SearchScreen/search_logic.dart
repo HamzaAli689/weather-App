@@ -1,49 +1,72 @@
+// import 'package:get/get.dart';
+// import '../services/weather_service.dart';
+//
+// class SearchLogic extends GetxController {
+//   var recentSearches = <String>[].obs;
+//   var isLoading = false.obs;
+//
+//   void searchAndReturnCity(String cityName) async {
+//     if (cityName.trim().isEmpty) return;
+//
+//     try {
+//       isLoading.value = true;
+//       // API se check kar rahe hain ke city theek hai ya nahi
+//       var data = await WeatherService.fetchWeather(cityName);
+//
+//       String formalCityName = "${data['name']}, ${data['sys']['country']}";
+//
+//       // History mein add karna
+//       if (!recentSearches.contains(formalCityName)) {
+//         recentSearches.insert(0, formalCityName);
+//       }
+//
+//       // ✅ Sab se important step: Dashboard par city name return karna
+//       Get.back(result: formalCityName);
+//
+//     } catch (e) {
+//       Get.snackbar("Error", "City not found. Please check the name.");
+//     } finally {
+//       isLoading.value = false;
+//     }
+//   }
+//
+//   void removeSearchItem(String city) {
+//     recentSearches.remove(city);
+//   }
+// }
 import 'package:get/get.dart';
-import '../dashboard/logic.dart';
+import '../services/weather_service.dart';
 
-class SearchViewController extends GetxController {
-  // Recent searches list ko reactive (.obs) banaya hai
-  var recentSearches = <Map<String, dynamic>>[
-    {"city": "Lahore", "country": "Pakistan", "temp": "32°C", "condition": "Sunny"},
-    {"city": "Dubai", "country": "UAE", "temp": "36°C", "condition": "Hazy"},
-    {"city": "London", "country": "UK", "temp": "18°C", "condition": "Rainy"},
-    {"city": "New York", "country": "US", "temp": "24°C", "condition": "Partly Cloudy"},
-  ].obs;
+class SearchLogic extends GetxController {
+  // ✅ Ye list ab destroy nahi hogi agar controller permanent ho
+  var recentSearches = <String>[].obs;
+  var isLoading = false.obs;
 
-  // Jab user search bar me type karke enter kare
-  void searchCity(String cityName) {
-    if (cityName.trim().isNotEmpty) {
-      String formattedCity = cityName.trim();
+  void searchAndReturnCity(String cityName) async {
+    if (cityName.trim().isEmpty) return;
 
-      // Check karein ke city pehle se list mein hai ya nahi, agar hai toh remove kar dein taake duplicate na ho aur top par aa jaye
-      recentSearches.removeWhere((item) => item["city"].toString().toLowerCase() == formattedCity.toLowerCase());
+    try {
+      isLoading.value = true;
+      var data = await WeatherService.fetchWeather(cityName);
 
-      // Nayi search ko list ke top (index 0) par add kar dein
-      recentSearches.insert(0, {
-        "city": formattedCity,
-        "country": "International", // Aap API se country bhi fetch kar sakte hain
-        "temp": "--°C",
-        "condition": "Unknown",
-      });
+      String formalCityName = "${data['name']}, ${data['sys']['country']}";
 
-      // Dashboard ka weather update karne ke liye
-      selectCity(formattedCity);
-    }
-  }
-
-  // Jab user kisi bhi recent search par click kare
-  void selectCity(String cityName) {
-    if (cityName.isNotEmpty) {
-      if (Get.isRegistered<DashboardLogic>()) {
-        final dashboardLogic = Get.find<DashboardLogic>();
-        dashboardLogic.getWeatherData(cityName);
+      // Agar list mein pehle se nahi hai toh top par add kar dein
+      if (!recentSearches.contains(formalCityName)) {
+        recentSearches.insert(0, formalCityName);
       }
-      Get.back(); // Wapis Dashboard par jane ke liye
+
+      // Wapas dashboard par bhej dein
+      Get.back(result: formalCityName);
+
+    } catch (e) {
+      Get.snackbar("Error", "City not found. Please check the name.");
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  // History clear karne ke liye
-  void clearHistory() {
-    recentSearches.clear();
+  void removeSearchItem(String city) {
+    recentSearches.remove(city);
   }
 }
