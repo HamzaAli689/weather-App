@@ -1,4 +1,5 @@
 
+
 # 🌤️ Skyora – Modern Weather Companion App
 
 <p align="center">
@@ -86,7 +87,7 @@ Detailed weather information including:
 # 📱 App UI Preview
 
 <p align="center">
-  <img src="Assets/images/dashboard.png" width="220">
+  <img src="https://github.com/user-attachments/assets/5038155b-6f8b-429c-947a-653f5ede5ae6" width="220">
   <img src="Assets/images/hourly.png" width="220">
   <img src="Assets/images/settings.png" width="220">
 </p>
