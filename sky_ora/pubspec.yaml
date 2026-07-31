@@ -42,6 +42,8 @@ dependencies:
   flutter_svg: ^2.0.10
   geolocator:
   geocoding:
+  gap:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:
