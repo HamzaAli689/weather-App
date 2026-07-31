@@ -1,7 +1,8 @@
+
 # 🌤️ Skyora – Modern Weather Companion App
 
 <p align="center">
-  <img src="Assets/images/2.png" width="150" alt="Skyora Logo">
+  <img src="https://github.com/user-attachments/assets/7c1a8a05-5412-4f62-9cb6-ca59202d8138" width="150" alt="Skyora Logo">
 </p>
 
 <p align="center">
