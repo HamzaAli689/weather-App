@@ -18,27 +18,33 @@
 
 ---
 
-## ✨ Overview
+# ✨ Overview
 
 Weather information should be simple, beautiful, and accessible.
 
-**Skyora** focuses on delivering a smooth weather experience by combining real-time weather data with a modern mobile interface. The application is designed with a premium dark glassmorphism theme, providing users with clear weather insights through an intuitive and responsive UI.
+**Skyora** is designed to provide users with a smooth and modern weather experience by combining real-time weather data with an elegant mobile interface.
 
-The goal behind Skyora was not only to build a weather app but to create a production-style Flutter application with clean architecture, state management, API integration, and modern UI practices.
+The application features a premium dark glassmorphism design, providing clear weather insights through an intuitive, responsive, and user-friendly experience.
+
+The main goal behind Skyora was not only to create a weather application but to build a production-style Flutter project following modern development practices including clean UI design, state management, API integration, and reusable components.
 
 ---
 
 # 🌟 Features
 
-### 🌍 Real-Time Weather Dashboard
+## 🌍 Real-Time Weather Dashboard
+
 - Live weather information based on user location
-- Current temperature and weather condition
+- Current temperature and weather conditions
 - Feels-like temperature
 - Location-based weather updates
-- Clean and responsive dashboard design
+- Modern responsive dashboard layout
 
-### 📊 Environmental Insights
-Detailed weather metrics including:
+---
+
+## 📊 Environmental Insights
+
+Detailed weather information including:
 
 - Humidity percentage
 - Wind speed
@@ -46,22 +52,33 @@ Detailed weather metrics including:
 - Visibility information
 - Additional weather statistics
 
-### ⏰ Hourly Weather Forecast
+---
+
+## ⏰ Hourly Weather Forecast
+
 - Smooth horizontal forecast timeline
 - Hour-by-hour weather updates
 - Temperature and weather condition indicators
+- Easy-to-read weather cards
 
-### ⚙️ Personalization & Settings
+---
+
+## ⚙️ Personalization & Settings
+
 - Dark mode support
 - Temperature unit switching (°C / °F)
 - User preference management
 - Application information section
 
-### 🎨 Premium UI Experience
+---
+
+## 🎨 Premium UI Experience
+
 - Modern glassmorphism design
 - Deep navy gradient theme
 - Custom reusable Flutter widgets
-- Smooth animations and responsive layouts
+- Smooth animations
+- Responsive layouts for different screen sizes
 
 ---
 
@@ -77,32 +94,101 @@ Detailed weather metrics including:
   <b>Dashboard • Hourly Forecast • Settings</b>
 </p>
 
-
 ---
 
 # 🛠️ Tech Stack
 
 ## Framework
+
 - Flutter
 - Dart
 
 ## State Management
+
 - GetX
 
-## Storage
+## Local Storage
+
 - GetStorage
 
 ## APIs & Services
+
 - REST API Integration
 - Geolocation Services
 - Weather Data Processing
 
 ## Architecture
+
 - Reactive component-based architecture
+- Feature-based project structure
 - Reusable UI components
-- Organized feature-based structure
 - Separation of UI and business logic
 
 ---
 
 # 📂 Project Structure
+lib/
+│
+├── controllers/
+├── models/
+├── services/
+├── screens/
+├── widgets/
+├── routes/
+└── utils/
+
+---
+
+# 🚀 Getting Started
+
+Follow these steps to run Skyora locally.
+
+## Prerequisites
+
+Make sure you have:
+
+- Flutter SDK installed
+- Android Studio or VS Code configured
+- Android Emulator or physical Android/iOS device
+
+## Check Flutter installation:
+
+```bash
+flutter doctor
+
+
+## 📥 Installation
+1. Clone Repository
+git clone https://github.com/your-username/skyora.git
+2. Navigate to Project Directory
+cd skyora
+3. Install Dependencies
+flutter pub get
+4. Run Application
+flutter run
+📦 Build Release APK
+
+To generate a release APK:
+
+flutter build apk --release
+🔮 Future Improvements
+
+Planned enhancements:
+
+🌧️ Weather notifications
+📍 Multiple saved locations
+🌎 Weather maps integration
+📈 Weather history tracking
+🌙 Advanced weather animations
+🤖 AI-based weather suggestions
+🤝 Contribution
+
+Contributions, suggestions, and feedback are always welcome.
+
+If you have ideas to improve Skyora, feel free to open an issue or submit a pull request.
+
+👨‍💻 Developer
+
+Hamza Ali
+
+Flutter Developer passionate about building modern mobile applications with clean UI, scalable architecture, and real-world functionality.
