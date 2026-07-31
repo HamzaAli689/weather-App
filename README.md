@@ -88,7 +88,7 @@ Detailed weather information including:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/5038155b-6f8b-429c-947a-653f5ede5ae6" width="220">
-  <img src="Assets/images/hourly.png" width="220">
+  <img src=src="https://github.com/user-attachments/assets/65a4577f-be1b-482c-88e5-dc5d210d7c5c" width="220">
   <img src="Assets/images/settings.png" width="220">
 </p>
 
