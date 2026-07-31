@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
@@ -31,7 +32,6 @@ class OnboardingPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(),
                 // Glassmorphic Card Container for 3D Illustration
                 Container(
                   width: double.infinity,
@@ -62,7 +62,7 @@ class OnboardingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 35),
+                Gap(120),
                 // Heading Title
                 const Text(
                   "Weather Updates\nMade Simple",
@@ -86,7 +86,7 @@ class OnboardingPage extends StatelessWidget {
                     letterSpacing: 0.3,
                   ),
                 ),
-                const SizedBox(height: 30),
+                Gap(30),
                 // Page Indicator Dots
 
                 // Get Started Button
