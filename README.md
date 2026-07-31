@@ -1,1 +1,196 @@
-# weather-App
+
+
+# 🌤️ Skyora – Modern Weather Companion App
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7c1a8a05-5412-4f62-9cb6-ca59202d8138" width="150" alt="Skyora Logo">
+</p>
+
+<p align="center">
+  <b>Skyora</b> is a modern weather companion application built with Flutter that provides real-time weather updates, detailed environmental insights, and smooth weather forecasting through a premium glassmorphism interface.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
+  <img src="https://img.shields.io/badge/GetX-8A2BE2?style=for-the-badge&logo=getx&logoColor=white" alt="GetX">
+  <img src="https://img.shields.io/badge/GetStorage-Local%20Storage-orange?style=for-the-badge" alt="GetStorage">
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-lightgrey?style=for-the-badge" alt="Platform">
+</p>
+
+---
+
+# ✨ Overview
+
+Weather information should be simple, beautiful, and accessible.
+
+**Skyora** is designed to provide users with a smooth and modern weather experience by combining real-time weather data with an elegant mobile interface.
+
+The application features a premium dark glassmorphism design, providing clear weather insights through an intuitive, responsive, and user-friendly experience.
+
+The main goal behind Skyora was not only to create a weather application but to build a production-style Flutter project following modern development practices including clean UI design, state management, API integration, and reusable components.
+
+---
+
+# 🌟 Features
+
+## 🌍 Real-Time Weather Dashboard
+
+- Live weather information based on user location
+- Current temperature and weather conditions
+- Feels-like temperature
+- Location-based weather updates
+- Modern responsive dashboard layout
+
+---
+
+## 📊 Environmental Insights
+
+Detailed weather information including:
+
+- Humidity percentage
+- Wind speed
+- Atmospheric pressure
+- Visibility information
+- Additional weather statistics
+
+---
+
+## ⏰ Hourly Weather Forecast
+
+- Smooth horizontal forecast timeline
+- Hour-by-hour weather updates
+- Temperature and weather condition indicators
+- Easy-to-read weather cards
+
+---
+
+## ⚙️ Personalization & Settings
+
+- Dark mode support
+- Temperature unit switching (°C / °F)
+- User preference management
+- Application information section
+
+---
+
+## 🎨 Premium UI Experience
+
+- Modern glassmorphism design
+- Deep navy gradient theme
+- Custom reusable Flutter widgets
+- Smooth animations
+- Responsive layouts for different screen sizes
+
+---
+
+# 📱 App UI Preview
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5038155b-6f8b-429c-947a-653f5ede5ae6" width="220">
+  <img src="https://github.com/user-attachments/assets/65a4577f-be1b-482c-88e5-dc5d210d7c5c" width="220">
+  <img src="https://github.com/user-attachments/assets/8848f121-b8be-4ee5-94c2-03be0baa36a2" width="220">
+</p>
+
+<p align="center">
+  <b>Dashboard • Hourly Forecast • Settings</b>
+</p>
+
+---
+
+# 🛠️ Tech Stack
+
+## Framework
+
+- Flutter
+- Dart
+
+## State Management
+
+- GetX
+
+## Local Storage
+
+- GetStorage
+
+## APIs & Services
+
+- REST API Integration
+- Geolocation Services
+- Weather Data Processing
+
+## Architecture
+
+- Reactive component-based architecture
+- Feature-based project structure
+- Reusable UI components
+- Separation of UI and business logic
+
+---
+
+# 📂 Project Structure
+lib/
+│
+├── controllers/
+├── models/
+├── services/
+├── screens/
+├── widgets/
+├── routes/
+└── utils/
+
+---
+
+# 🚀 Getting Started
+
+Follow these steps to run Skyora locally.
+
+## Prerequisites
+
+Make sure you have:
+
+- Flutter SDK installed
+- Android Studio or VS Code configured
+- Android Emulator or physical Android/iOS device
+
+## Check Flutter installation:
+
+```bash
+flutter doctor
+
+
+## 📥 Installation
+1. Clone Repository
+git clone https://github.com/your-username/skyora.git
+2. Navigate to Project Directory
+cd skyora
+3. Install Dependencies
+flutter pub get
+4. Run Application
+flutter run
+📦 Build Release APK
+
+To generate a release APK:
+
+flutter build apk --release
+🔮 Future Improvements
+
+Planned enhancements:
+
+🌧️ Weather notifications
+📍 Multiple saved locations
+🌎 Weather maps integration
+📈 Weather history tracking
+🌙 Advanced weather animations
+🤖 AI-based weather suggestions
+🤝 Contribution
+
+Contributions, suggestions, and feedback are always welcome.
+
+If you have ideas to improve Skyora, feel free to open an issue or submit a pull request.
+
+👨‍💻 Developer
+
+Hamza Ali
+
+Flutter Developer passionate about building modern mobile applications with clean UI, scalable architecture, and real-world functionality.
