@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../SearchScreen/search_view.dart';
+import '../forecast_detail/forecast_detail_view.dart';
 import '../setting/view.dart';
 import 'logic.dart';
 
@@ -47,7 +48,6 @@ class DashboardPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          // ✅ Search screen se result wapas aane ka wait karein
                           String? selectedCity = await Get.to(() => const SearchScreen());
 
                           if (selectedCity != null && selectedCity.isNotEmpty) {
@@ -77,7 +77,6 @@ class DashboardPage extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              // ✅ Search screen se result wapas aane ka wait karein
                               String? selectedCity = await Get.to(() => const SearchScreen());
 
                               if (selectedCity != null && selectedCity.isNotEmpty) {
@@ -89,10 +88,10 @@ class DashboardPage extends StatelessWidget {
                               color: Colors.white70,
                             ),
                           ),
-                          SizedBox(width: 15),
+                          const SizedBox(width: 15),
                           GestureDetector(
-                            onTap: (){
-                              Get.to(SettingPage());
+                            onTap: () {
+                              Get.to(() => SettingPage());
                             },
                             child: const Icon(
                               Icons.account_circle_outlined,
@@ -194,7 +193,7 @@ class DashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 25),
 
-                  // Section Title
+                  // Hourly Forecast Section Title
                   const Text(
                     "Today's Forecast (12+ Hours)",
                     style: TextStyle(
@@ -205,7 +204,7 @@ class DashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
 
-                  // Hourly Forecast Horizontal Scroll (Real-time dynamic data)
+                  // Hourly Forecast Horizontal Scroll
                   SizedBox(
                     height: 105,
                     child: controller.hourlyForecast.isEmpty
@@ -220,7 +219,6 @@ class DashboardPage extends StatelessWidget {
                       itemCount: controller.hourlyForecast.length,
                       itemBuilder: (context, index) {
                         final hourly = controller.hourlyForecast[index];
-                        // Pehla item selected dikhane ke liye logic
                         bool isSelected = index == 0;
                         return _buildHourlyCard(
                           hourly['time'],
@@ -231,6 +229,107 @@ class DashboardPage extends StatelessWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 25),
+
+                  // 7-Day Forecast Section Title
+                  const Text(
+                    "7-Day Forecast",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  // 7-Day Forecast List Container (Clickable to detail screen)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.04),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.08),
+                      ),
+                    ),
+                    child: controller.dailyForecast.isEmpty
+                        ? const Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Center(
+                        child: Text(
+                          "Loading 7-Day Forecast...",
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                      ),
+                    )
+                        : ListView.builder(
+                      itemCount: controller.dailyForecast.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final dayData = controller.dailyForecast[index];
+                        return InkWell(
+                          onTap: () {
+                            // ✅ Click karne par selected day ka data next screen par jaye ga
+                            Get.to(() => ForecastDetailView(weatherData: dayData));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    dayData['day'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(dayData['icon'], color: const Color(0xFFFBBF24), size: 20),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      dayData['condition'],
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.7),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      dayData['tempHigh'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      dayData['tempLow'],
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.5),
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
