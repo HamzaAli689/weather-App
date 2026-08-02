@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../services/AppSettingsService.dart';
 import '../services/weather_service.dart';
 
 class DashboardLogic extends GetxController {
-  // Settings service ko find kar rahe hain taake unit ka pata chal sakay
   final AppSettingsService _settingsService = Get.find<AppSettingsService>();
 
   var cityName = "Loading...".obs;
@@ -19,24 +17,24 @@ class DashboardLogic extends GetxController {
   var isLoading = false.obs;
 
   var hourlyForecast = <Map<String, dynamic>>[].obs;
+  var dailyForecast = <Map<String, dynamic>>[].obs;
 
-  // Raw values store rakhne ke liye taake unit change hone par dobara API call na karni pare
+  // Raw values for unit conversion
   double _rawTemp = 0.0;
   double _rawFeelsLike = 0.0;
   List<Map<String, dynamic>> _rawHourlyList = [];
+  List<Map<String, dynamic>> _rawDailyList = [];
 
   @override
   void onInit() {
     super.onInit();
-    getWeatherData("Vehari"); // Default location
+    getWeatherData("Vehari");
 
-    // Listen to unit changes (Jab bhi user Settings se °C/°F change kare ga, UI foran update ho gi)
     ever(_settingsService.isCelsius, (_) {
       _updateFormattedValues();
     });
   }
 
-  // Naye city ka data fetch karne ke liye method
   void changeCity(String newCity) {
     getWeatherData(newCity);
   }
@@ -58,16 +56,15 @@ class DashboardLogic extends GetxController {
       pressure.value = "${data['main']['pressure']} hPa";
       visibility.value = "${(data['visibility'] / 1000)} km";
 
-      // 2. Hourly Forecast (12+ hours)
+      // 2. Forecast Data (Hourly & Daily)
       var forecastData = await WeatherService.fetchForecast(city);
       if (forecastData != null && forecastData['list'] != null) {
         List items = forecastData['list'];
 
+        // Hourly (12 items) - Fixed Type Casting
         _rawHourlyList = items.take(12).map<Map<String, dynamic>>((item) {
           String dateTimeStr = item['dt_txt'] ?? "";
-          String formattedTime = dateTimeStr.isNotEmpty
-              ? _formatTime(dateTimeStr)
-              : "";
+          String formattedTime = dateTimeStr.isNotEmpty ? _formatTime(dateTimeStr) : "";
 
           return {
             'time': formattedTime,
@@ -76,11 +73,29 @@ class DashboardLogic extends GetxController {
             'icon': _getWeatherIcon(item['weather'][0]['main']),
           };
         }).toList();
+
+        // Daily / 7-Day Forecast filter
+        Map<String, dynamic> dailyMap = {};
+        for (var item in items) {
+          String dtTxt = item['dt_txt'] ?? "";
+          if (dtTxt.contains("12:00:00")) {
+            String dayName = _formatDayName(dtTxt);
+            dailyMap[dayName] = {
+              'day': dayName,
+              'date': dtTxt.split(' ')[0],
+              'temp_min': (item['main']['temp_min'] as num).toDouble(),
+              'temp_max': (item['main']['temp_max'] as num).toDouble(),
+              'condition': item['weather'][0]['main'],
+              'description': item['weather'][0]['description'] ?? 'Weather condition expected.',
+              'icon': _getWeatherIcon(item['weather'][0]['main']),
+            };
+          }
+        }
+        // ✅ Explicitly cast to Map<String, dynamic> list to resolve type error
+        _rawDailyList = dailyMap.values.map((e) => Map<String, dynamic>.from(e)).toList();
       }
 
-      // Format values according to selected temperature unit (°C / °F)
       _updateFormattedValues();
-
     } catch (e) {
       Get.snackbar("Error", "Could not fetch weather data: $e");
     } finally {
@@ -88,19 +103,17 @@ class DashboardLogic extends GetxController {
     }
   }
 
-  // Temperature aur Unit ko format karne ka logic
   void _updateFormattedValues() {
     String unitSymbol = _settingsService.isCelsius.value ? "°C" : "°F";
 
-    // Main Temperature
+    // Main Temp
     double convertedTemp = _settingsService.convertTemp(_rawTemp);
     temperature.value = "${convertedTemp.round()}$unitSymbol";
 
-    // Feels Like
     double convertedFeelsLike = _settingsService.convertTemp(_rawFeelsLike);
     feelsLike.value = "Feels like ${convertedFeelsLike.round()}$unitSymbol";
 
-    // Hourly Forecast Temperature Conversion
+    // Hourly Forecast
     if (_rawHourlyList.isNotEmpty) {
       hourlyForecast.value = _rawHourlyList.map((item) {
         double rawHourTemp = item['temp'];
@@ -114,6 +127,24 @@ class DashboardLogic extends GetxController {
         };
       }).toList();
     }
+
+    // Daily Forecast
+    if (_rawDailyList.isNotEmpty) {
+      dailyForecast.value = _rawDailyList.map((item) {
+        double convMax = _settingsService.convertTemp(item['temp_max']);
+        double convMin = _settingsService.convertTemp(item['temp_min']);
+
+        return {
+          'day': item['day'],
+          'date': item['date'],
+          'tempHigh': "${convMax.round()}$unitSymbol",
+          'tempLow': "${convMin.round()}$unitSymbol",
+          'condition': item['condition'],
+          'description': item['description'],
+          'icon': item['icon'],
+        };
+      }).toList();
+    }
   }
 
   String _formatTime(String dtTxt) {
@@ -123,6 +154,16 @@ class DashboardLogic extends GetxController {
       String period = hour >= 12 ? "PM" : "AM";
       int formattedHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
       return "$formattedHour:00 $period";
+    } catch (e) {
+      return dtTxt;
+    }
+  }
+
+  String _formatDayName(String dtTxt) {
+    try {
+      DateTime parsedDate = DateTime.parse(dtTxt);
+      List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      return days[parsedDate.weekday - 1];
     } catch (e) {
       return dtTxt;
     }
