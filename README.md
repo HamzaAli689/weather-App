@@ -1,3 +1,7 @@
+<img width="688" height="1032" alt="7" src="https://github.com/user-attachments/assets/5b6ebbd2-778c-4d90-987c-30c9e8681b40" />
+
+
+
 
 # 🌤️ Skyora – Modern Weather Companion App
 
