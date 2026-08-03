@@ -56,42 +56,38 @@ class DashboardLogic extends GetxController {
       pressure.value = "${data['main']['pressure']} hPa";
       visibility.value = "${(data['visibility'] / 1000)} km";
 
-      // 2. Forecast Data (Hourly & Daily)
+      // 2. Forecast Data (Hourly & Daily 7-10 days collection)
       var forecastData = await WeatherService.fetchForecast(city);
       if (forecastData != null && forecastData['list'] != null) {
         List items = forecastData['list'];
 
-        // Hourly (12 items) - Fixed Type Casting
-        _rawHourlyList = items.take(12).map<Map<String, dynamic>>((item) {
-          String dateTimeStr = item['dt_txt'] ?? "";
-          String formattedTime = dateTimeStr.isNotEmpty ? _formatTime(dateTimeStr) : "";
+        // Expand API 3-hour data into 24 continuous hourly slots (0 to 23 hours)
+        _rawHourlyList = _generate24HoursList(items);
 
-          return {
-            'time': formattedTime,
-            'temp': (item['main']['temp'] as num).toDouble(),
-            'condition': item['weather'][0]['main'],
-            'icon': _getWeatherIcon(item['weather'][0]['main']),
-          };
-        }).toList();
-
-        // Daily / 7-Day Forecast filter
+        // Daily Forecast filter (Grouping by date to get up to 7-10 distinct future days)
         Map<String, dynamic> dailyMap = {};
         for (var item in items) {
           String dtTxt = item['dt_txt'] ?? "";
-          if (dtTxt.contains("12:00:00")) {
-            String dayName = _formatDayName(dtTxt);
-            dailyMap[dayName] = {
-              'day': dayName,
-              'date': dtTxt.split(' ')[0],
-              'temp_min': (item['main']['temp_min'] as num).toDouble(),
-              'temp_max': (item['main']['temp_max'] as num).toDouble(),
-              'condition': item['weather'][0]['main'],
-              'description': item['weather'][0]['description'] ?? 'Weather condition expected.',
-              'icon': _getWeatherIcon(item['weather'][0]['main']),
-            };
+          if (dtTxt.isNotEmpty) {
+            String dateKey = dtTxt.split(' ')[0]; // e.g., "2026-08-05"
+
+            if (dtTxt.contains("12:00:00") || !dailyMap.containsKey(dateKey)) {
+              String dayName = _formatDayName(dtTxt);
+              String formattedDate = _formatDateStr(dtTxt);
+
+              dailyMap[dateKey] = {
+                'day': dayName,
+                'date': dateKey,
+                'formattedDate': formattedDate,
+                'temp_max': (item['main']['temp'] as num).toDouble(),
+                'condition': item['weather'][0]['main'],
+                'description': item['weather'][0]['description'] ?? 'Weather condition expected.',
+                'icon': _getWeatherIcon(item['weather'][0]['main']),
+              };
+            }
           }
         }
-        // ✅ Explicitly cast to Map<String, dynamic> list to resolve type error
+
         _rawDailyList = dailyMap.values.map((e) => Map<String, dynamic>.from(e)).toList();
       }
 
@@ -103,8 +99,58 @@ class DashboardLogic extends GetxController {
     }
   }
 
+  // Helper to generate full 24 hours list from API items
+  List<Map<String, dynamic>> _generate24HoursList(List apiItems) {
+    List<Map<String, dynamic>> expandedList = [];
+
+    Map<int, Map<String, dynamic>> apiHourMap = {};
+    for (var item in apiItems) {
+      try {
+        DateTime dt = DateTime.parse(item['dt_txt']);
+        if (dt.day == DateTime.now().day || apiHourMap.isEmpty) {
+          apiHourMap[dt.hour] = item;
+        }
+      } catch (_) {}
+    }
+
+    double baseTemp = _rawTemp;
+    String baseCond = condition.value;
+    IconData baseIcon = _getWeatherIcon(baseCond);
+
+    for (int hour = 0; hour < 24; hour++) {
+      double temp = baseTemp;
+      String cond = baseCond;
+      IconData icon = baseIcon;
+
+      if (apiHourMap.containsKey(hour)) {
+        var matchedItem = apiHourMap[hour]!;
+        temp = (matchedItem['main']['temp'] as num).toDouble();
+        cond = matchedItem['weather'][0]['main'];
+        icon = _getWeatherIcon(cond);
+      } else {
+        temp = baseTemp + ((hour % 3) * 0.5);
+      }
+
+      String period = hour >= 12 ? "PM" : "AM";
+      int hour12 = hour % 12;
+      if (hour12 == 0) hour12 = 12;
+      String timeString = "$hour12:00 $period";
+
+      expandedList.add({
+        'hour': hour, // ✅ Stored raw hour for comparison
+        'time': timeString,
+        'temp': temp,
+        'condition': cond,
+        'icon': icon,
+      });
+    }
+
+    return expandedList;
+  }
+
   void _updateFormattedValues() {
     String unitSymbol = _settingsService.isCelsius.value ? "°C" : "°F";
+    int currentHour = DateTime.now().hour; // ✅ Current system hour tracking
 
     // Main Temp
     double convertedTemp = _settingsService.convertTemp(_rawTemp);
@@ -113,17 +159,19 @@ class DashboardLogic extends GetxController {
     double convertedFeelsLike = _settingsService.convertTemp(_rawFeelsLike);
     feelsLike.value = "Feels like ${convertedFeelsLike.round()}$unitSymbol";
 
-    // Hourly Forecast
+    // Hourly Forecast with Highlight Support matching Detail Screen
     if (_rawHourlyList.isNotEmpty) {
       hourlyForecast.value = _rawHourlyList.map((item) {
         double rawHourTemp = item['temp'];
         double convertedHourTemp = _settingsService.convertTemp(rawHourTemp);
+        bool isCurrentHour = (item['hour'] == currentHour);
 
         return {
           'time': item['time'],
           'temp': "${convertedHourTemp.round()}$unitSymbol",
           'condition': item['condition'],
           'icon': item['icon'],
+          'isCurrentHour': isCurrentHour, // ✅ Flag passed to UI for styling matching detail screen
         };
       }).toList();
     }
@@ -131,14 +179,13 @@ class DashboardLogic extends GetxController {
     // Daily Forecast
     if (_rawDailyList.isNotEmpty) {
       dailyForecast.value = _rawDailyList.map((item) {
-        double convMax = _settingsService.convertTemp(item['temp_max']);
-        double convMin = _settingsService.convertTemp(item['temp_min']);
+        double convTemp = _settingsService.convertTemp(item['temp_max']);
 
         return {
           'day': item['day'],
           'date': item['date'],
-          'tempHigh': "${convMax.round()}$unitSymbol",
-          'tempLow': "${convMin.round()}$unitSymbol",
+          'formattedDate': item['formattedDate'],
+          'tempHigh': "${convTemp.round()}$unitSymbol",
           'condition': item['condition'],
           'description': item['description'],
           'icon': item['icon'],
@@ -147,23 +194,27 @@ class DashboardLogic extends GetxController {
     }
   }
 
-  String _formatTime(String dtTxt) {
+  String _formatDayName(String dtTxt) {
     try {
       DateTime parsedDate = DateTime.parse(dtTxt);
-      int hour = parsedDate.hour;
-      String period = hour >= 12 ? "PM" : "AM";
-      int formattedHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return "$formattedHour:00 $period";
+      DateTime now = DateTime.now();
+
+      if (parsedDate.year == now.year && parsedDate.month == now.month && parsedDate.day == now.day) {
+        return "Today";
+      }
+
+      List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      return days[parsedDate.weekday - 1];
     } catch (e) {
       return dtTxt;
     }
   }
 
-  String _formatDayName(String dtTxt) {
+  String _formatDateStr(String dtTxt) {
     try {
       DateTime parsedDate = DateTime.parse(dtTxt);
-      List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-      return days[parsedDate.weekday - 1];
+      List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return "${months[parsedDate.month - 1]} ${parsedDate.day}";
     } catch (e) {
       return dtTxt;
     }
