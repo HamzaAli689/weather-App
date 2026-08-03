@@ -1,3 +1,7 @@
+<img width="688" height="1535" alt="6" src="" />
+<img width="688" height="1188" alt="5" src="" />
+<img width="688" height="1190" alt="4" src="" />
+
 
 
 # 🌤️ Skyora – Modern Weather Companion App
@@ -93,7 +97,17 @@ Detailed weather information including:
 </p>
 
 <p align="center">
-  <b>Dashboard • Hourly Forecast • Settings</b>
+  <b>Splash Screen • Onboarding Screen • Dashboard</b>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c2e8216c-f557-45f1-800b-3362c367ad01" width="220">
+  <img src="https://github.com/user-attachments/assets/14d9cbae-2d34-4b0f-9337-3020399599c5" width="220">
+  <img src="https://github.com/user-attachments/assets/c63f529e-956b-435f-bbf1-618aaf5ed01c" width="220">
+</p>
+
+<p align="center">
+  <b>Dayily & Hourly Forecast • Search Screen • Calender</b>
 </p>
 
 ---
