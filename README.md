@@ -87,9 +87,9 @@ Detailed weather information including:
 # 📱 App UI Preview
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/5038155b-6f8b-429c-947a-653f5ede5ae6" width="220">
-  <img src="https://github.com/user-attachments/assets/65a4577f-be1b-482c-88e5-dc5d210d7c5c" width="220">
-  <img src="https://github.com/user-attachments/assets/8848f121-b8be-4ee5-94c2-03be0baa36a2" width="220">
+  <img src="https://github.com/user-attachments/assets/2c3c634a-fbbd-424f-879c-89ddf274faf0" width="220">
+  <img src="https://github.com/user-attachments/assets/6116e4bc-7fb7-4189-be7a-7035abcf4463" width="220">
+  <img src="https://github.com/user-attachments/assets/c43fdb1d-26c0-41ef-857e-521b5b1d80fc" width="220">
 </p>
 
 <p align="center">
