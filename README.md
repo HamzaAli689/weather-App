@@ -1,6 +1,3 @@
-<img width="688" height="1032" alt="7" src="https://github.com/user-attachments/assets/5b6ebbd2-778c-4d90-987c-30c9e8681b40" />
-
-
 
 
 # 🌤️ Skyora – Modern Weather Companion App
@@ -90,9 +87,9 @@ Detailed weather information including:
 # 📱 App UI Preview
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/2c3c634a-fbbd-424f-879c-89ddf274faf0" width="220">
-  <img src="https://github.com/user-attachments/assets/6116e4bc-7fb7-4189-be7a-7035abcf4463" width="220">
-  <img src="https://github.com/user-attachments/assets/c43fdb1d-26c0-41ef-857e-521b5b1d80fc" width="220">
+  <img src="https://github.com/user-attachments/assets/74ae5aa3-fe93-4ef2-8d2d-a50235483138" width="220">
+  <img src="https://github.com/user-attachments/assets/6c8f0345-054a-4070-8542-a415a8af4260" width="220">
+  <img src="https://github.com/user-attachments/assets/2653b887-299e-4471-ae71-0b46982ad628" width="220">
 </p>
 
 <p align="center">
@@ -100,13 +97,13 @@ Detailed weather information including:
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c2e8216c-f557-45f1-800b-3362c367ad01" width="220">
-  <img src="https://github.com/user-attachments/assets/14d9cbae-2d34-4b0f-9337-3020399599c5" width="220">
-  <img src="https://github.com/user-attachments/assets/c63f529e-956b-435f-bbf1-618aaf5ed01c" width="220">
+  <img src="https://github.com/user-attachments/assets/1cca2b31-88cd-441d-9cf9-3ef5ef716f42" width="220">
+  <img src="https://github.com/user-attachments/assets/ddfabe16-efa6-4cac-b317-23310828d890" width="220">
+  <img src="https://github.com/user-attachments/assets/9ce6e839-ea35-45b2-a411-652601f13841" width="220">
 </p>
 
 <p align="center">
-  <b>Dayily & Hourly Forecast • Search Screen • Calender</b>
+  <b>Dayily & Hourly Forecast • Search Screen • Setting Screen</b>
 </p>
 
 ---
