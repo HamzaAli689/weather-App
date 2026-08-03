@@ -195,7 +195,7 @@ class DashboardPage extends StatelessWidget {
 
                   // Hourly Forecast Section Title
                   const Text(
-                    "Today's Forecast (12+ Hours)",
+                    "Today's Forecast",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -204,9 +204,9 @@ class DashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
 
-                  // Hourly Forecast Horizontal Scroll
+                  // Hourly Forecast Horizontal Scroll (24 Hours with Current Time Highlighted)
                   SizedBox(
-                    height: 105,
+                    height: 110,
                     child: controller.hourlyForecast.isEmpty
                         ? const Center(
                       child: Text(
@@ -219,21 +219,22 @@ class DashboardPage extends StatelessWidget {
                       itemCount: controller.hourlyForecast.length,
                       itemBuilder: (context, index) {
                         final hourly = controller.hourlyForecast[index];
-                        bool isSelected = index == 0;
+                        bool isCurrentHour = hourly['isCurrentHour'] ?? false;
+
                         return _buildHourlyCard(
                           hourly['time'],
                           hourly['temp'],
                           hourly['icon'],
-                          isSelected,
+                          isCurrentHour,
                         );
                       },
                     ),
                   ),
                   const SizedBox(height: 25),
 
-                  // 7-Day Forecast Section Title
+                  // 7-10 Days Forecast Section Title
                   const Text(
-                    "7-Day Forecast",
+                    "7-Day Extended Forecast",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -242,92 +243,102 @@ class DashboardPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
 
-                  // 7-Day Forecast List Container (Clickable to detail screen)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.04),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.08),
+                  // 7-10 Days Separate Glass Cards List
+                  controller.dailyForecast.isEmpty
+                      ? const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text(
+                        "Loading Extended Forecast...",
+                        style: TextStyle(color: Colors.white54),
                       ),
                     ),
-                    child: controller.dailyForecast.isEmpty
-                        ? const Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Center(
-                        child: Text(
-                          "Loading 7-Day Forecast...",
-                          style: TextStyle(color: Colors.white54),
-                        ),
-                      ),
-                    )
-                        : ListView.builder(
-                      itemCount: controller.dailyForecast.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final dayData = controller.dailyForecast[index];
-                        return InkWell(
+                  )
+                      : ListView.builder(
+                    itemCount: controller.dailyForecast.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final dayData = controller.dailyForecast[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: InkWell(
                           onTap: () {
-                            // ✅ Click karne par selected day ka data next screen par jaye ga
-                            Get.to(() => ForecastDetailView(weatherData: dayData));
+                            Get.to(() => ForecastDetailView(), arguments: dayData);
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.1),
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: 100,
-                                  child: Text(
-                                    dayData['day'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                  width: 110,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        dayData['day'],
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        dayData['formattedDate'],
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.6),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Row(
                                   children: [
-                                    Icon(dayData['icon'], color: const Color(0xFFFBBF24), size: 20),
+                                    Icon(dayData['icon'], color: const Color(0xFFFBBF24), size: 22),
                                     const SizedBox(width: 8),
                                     Text(
                                       dayData['condition'],
                                       style: TextStyle(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color: Colors.white.withOpacity(0.8),
                                         fontSize: 14,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      dayData['tempHigh'],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      dayData['tempLow'],
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(0.5),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  dayData['tempHigh'],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 30),
                 ],
@@ -382,21 +393,19 @@ class DashboardPage extends StatelessWidget {
       String time,
       String temp,
       IconData icon,
-      bool isSelected,
+      bool isCurrentHour,
       ) {
     return Container(
-      width: 70,
+      width: 75,
       margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: isSelected
-            ? const Color(0xFF1E3A8A).withOpacity(0.8)
-            : Colors.white.withOpacity(0.04),
+        // ✅ Same amber highlight colors matching detail screen
+        color: isCurrentHour ? Colors.amber.withOpacity(0.18) : Colors.white.withOpacity(0.04),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isSelected
-              ? const Color(0xFF60A5FA).withOpacity(0.5)
-              : Colors.white.withOpacity(0.08),
+          color: isCurrentHour ? Colors.amber : Colors.white.withOpacity(0.08),
+          width: isCurrentHour ? 2.0 : 1.0,
         ),
       ),
       child: Column(
@@ -405,17 +414,22 @@ class DashboardPage extends StatelessWidget {
           Text(
             time,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 11,
+              color: isCurrentHour ? Colors.amberAccent : Colors.white.withOpacity(0.7),
+              fontSize: 12,
+              fontWeight: isCurrentHour ? FontWeight.bold : FontWeight.w500,
             ),
           ),
-          Icon(icon, color: const Color(0xFFFBBF24), size: 22),
+          Icon(
+            icon,
+            color: isCurrentHour ? Colors.amber : const Color(0xFFFBBF24),
+            size: 22,
+          ),
           Text(
             temp,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: isCurrentHour ? FontWeight.bold : FontWeight.w600,
             ),
           ),
         ],
