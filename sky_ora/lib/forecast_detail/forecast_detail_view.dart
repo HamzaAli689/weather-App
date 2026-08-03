@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'forecast_detail_logic.dart';
 
 class ForecastDetailView extends StatelessWidget {
-  final Map<String, dynamic> weatherData; // Isme clicked day ka data aaye ga
-
-  const ForecastDetailView({Key? key, required this.weatherData}) : super(key: key);
+  const ForecastDetailView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Data extract karna jo pichli screen se pass hua hai
-    final String dayName = weatherData['day'] ?? 'Tuesday, August 4';
-    final String condition = weatherData['condition'] ?? 'Scattered Thunderstorms';
-    final String tempHigh = weatherData['tempHigh'] ?? '38°';
-    final String tempLow = weatherData['tempLow'] ?? '26°';
-    final String description = weatherData['description'] ?? 'Thunderstorms expected in the afternoon. Feels like 40°C.';
-    final IconData weatherIcon = weatherData['icon'] ?? Icons.wb_sunny_rounded;
+    final ForecastDetailLogic controller = Get.put(ForecastDetailLogic());
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A),
@@ -36,151 +29,202 @@ class ForecastDetailView extends StatelessWidget {
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top App Bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () => Get.back(),
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.05),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Obx(
+                  () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.05),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
                       ),
-                    ),
-                    Text(
-                      dayName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      Column(
+                        children: [
+                          Text(
+                            controller.selectedDayName.value,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            controller.selectedDateStr.value,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.6),
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.calendar_month, color: Colors.white54),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.05),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                    ),
-                  ],
-                ),
-                const Gap(20),
-
-                // Hero Glassmorphism Weather Summary Card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.06),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.white.withOpacity(0.12), width: 1.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 25,
-                        spreadRadius: 5,
+                      IconButton(
+                        onPressed: () => controller.pickDate(context),
+                        icon: const Icon(Icons.calendar_month, color: Colors.white),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.08),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        tooltip: "Select Any Date",
                       ),
                     ],
                   ),
-                  child: Column(
+                  const Gap(25),
+
+                  // Hero Weather Summary Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Colors.white.withOpacity(0.12), width: 1.5),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(controller.selectedIcon.value, color: const Color(0xFFFBBF24), size: 70),
+                        const Gap(15),
+                        Text(
+                          controller.selectedTemp.value,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Gap(8),
+                        Text(
+                          controller.selectedCondition.value,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Gap(10),
+                        Text(
+                          controller.selectedDescription.value,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Gap(25),
+
+                  // Section Title
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(weatherIcon, color: Colors.amber, size: 70),
-                      const Gap(15),
-                      Text(
-                        "High: $tempHigh / Low: $tempLow",
-                        style: const TextStyle(
+                      const Text(
+                        "24-Hour Hourly Forecast",
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Gap(8),
-                      Text(
-                        condition,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Gap(10),
-                      Text(
-                        description,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(25),
-
-                // Hourly Breakdown for That Day (Horizontal Scroll)
-                const Text(
-                  "Hourly Breakdown",
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const Gap(12),
-                SizedBox(
-                  height: 110,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: 75,
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: index == 2 ? const Color(0xFF3B82F6).withOpacity(0.3) : Colors.white.withOpacity(0.04),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: index == 2 ? const Color(0xFF3B82F6) : Colors.white.withOpacity(0.1),
+                      if (controller.isTodaySelected.value)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.amber.withOpacity(0.5)),
+                          ),
+                          child: const Text(
+                            "Current Time Highlighted",
+                            style: TextStyle(color: Colors.amber, fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${(index + 9)} AM",
-                              style: const TextStyle(color: Colors.white70, fontSize: 12),
-                            ),
-                            const Icon(Icons.wb_sunny, color: Colors.amber, size: 22),
-                            Text(
-                              "${34 + index}°",
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                    ],
                   ),
-                ),
-                const Gap(25),
+                  const Gap(15),
 
-                // 2x2 Grid Metrics (UV, Rain, Wind, Humidity)
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  childAspectRatio: 1.3,
-                  children: [
-                    _buildMetricCard("UV Index", "7 High", Icons.wb_sunny_outlined),
-                    _buildMetricCard("Chance of Rain", "65%", Icons.water_drop_outlined),
-                    _buildMetricCard("Average Wind", "15 km/h", Icons.air),
-                    _buildMetricCard("Humidity", "82%", Icons.opacity),
-                  ],
-                ),
-              ],
+                  // ✅ 24-Hour Hourly Forecast Horizontal List with Highlighting
+                  SizedBox(
+                    height: 110,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.hourly24Forecast.length,
+                      itemBuilder: (context, index) {
+                        final hourlyItem = controller.hourly24Forecast[index];
+                        bool isCurrentHour = (hourlyItem['hour'] == controller.currentActiveHourIndex.value);
+
+                        return Container(
+                          width: 75,
+                          margin: const EdgeInsets.only(right: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                          decoration: BoxDecoration(
+                            // Highlight background if it's current hour
+                            color: isCurrentHour ? Colors.amber.withOpacity(0.18) : Colors.white.withOpacity(0.04),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              // Highlight border if it's current hour
+                              color: isCurrentHour ? Colors.amber : Colors.white.withOpacity(0.08),
+                              width: isCurrentHour ? 2.0 : 1.0,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                hourlyItem['time'], // 24-hour format label e.g., "23:00"
+                                style: TextStyle(
+                                  color: isCurrentHour ? Colors.amberAccent : Colors.white.withOpacity(0.7),
+                                  fontSize: 12,
+                                  fontWeight: isCurrentHour ? FontWeight.bold : FontWeight.w500,
+                                ),
+                              ),
+                              Icon(
+                                hourlyItem['icon'],
+                                color: isCurrentHour ? Colors.amber : const Color(0xFFFBBF24),
+                                size: 22,
+                              ),
+                              Text(
+                                hourlyItem['temp'],
+                                style: TextStyle(
+                                  color: isCurrentHour ? Colors.white : Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const Gap(25),
+
+                  // Metrics Grid
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 1.3,
+                    children: [
+                      _buildMetricCard("UV Index", controller.uvIndex.value, Icons.wb_sunny_outlined),
+                      _buildMetricCard("Chance of Rain", controller.rainChance.value, Icons.water_drop_outlined),
+                      _buildMetricCard("Average Wind", controller.windSpeed.value, Icons.air),
+                      _buildMetricCard("Humidity", controller.humidity.value, Icons.opacity),
+                    ],
+                  ),
+                  const Gap(20),
+                ],
+              ),
             ),
           ),
         ),
@@ -188,7 +232,6 @@ class ForecastDetailView extends StatelessWidget {
     );
   }
 
-  // Metric Card Widget Helper
   Widget _buildMetricCard(String title, String value, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -205,8 +248,8 @@ class ForecastDetailView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              Icon(icon, color: Colors.lightBlueAccent, size: 24),
+              Text(value, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              Icon(icon, color: Colors.lightBlueAccent, size: 22),
             ],
           ),
         ],
