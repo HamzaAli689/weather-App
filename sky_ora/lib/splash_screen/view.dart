@@ -52,7 +52,7 @@ class SplashScreen extends GetView<SplashScreenLogic> {
                   child: Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: Image.asset(
-                      'Assets/images/1.png', // Apni 3D image ka path yahan dein
+                      'Assets/images/3.png', // Apni 3D image ka path yahan dein
                       fit: BoxFit.contain,
                     ),
                   ),
