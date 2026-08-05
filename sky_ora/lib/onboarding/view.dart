@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-
 import 'logic.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -34,7 +33,7 @@ class OnboardingPage extends StatelessWidget {
               children: [
                 // Glassmorphic Card Container for 3D Illustration
                 Container(
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width /1.2,
                   height: 270,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.04),
@@ -56,7 +55,7 @@ class OnboardingPage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Image.asset(
-                        'Assets/images/2.png', // Apni 3D image ka path dein
+                        'Assets/images/4.png', // Apni 3D image ka path dein
                         fit: BoxFit.contain,
                       ),
                     ),
